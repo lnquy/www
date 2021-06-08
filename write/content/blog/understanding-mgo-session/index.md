@@ -19,7 +19,7 @@ For simplicity, let's assume we're using `Strong/Primary` consistency mode, so e
 There're 3 ways of using session when sending queries to the MongoDB: Use the same fixed session every time [1], copy the original session every time [2] and clone the original session every time [3] as figure 1.
 
 <div style="text-align: center">
-<img src="img\code.jpg" alt="Code" style="zoom:60%;" />
+<img src="img/code.jpg" alt="Code" style="zoom:60%;" />
 <p style="font-size: 12px; font-style: italic">Figure 1: Three ways to use mgo session</p>
 </div>
 
@@ -37,7 +37,7 @@ Let's say we have a REST API that calls to MongoDB to read some data then return
    If there's unused socket(s) in pool, then pool returns the socket back to session for reusing. Otherwise, if the pool is empty and the number of opened sockets is not reached `PoolLimit` (default 4096) yet, then mgo will automatically create a new socket (Dial to MongoDB node) and return it to the session.
    Once the `PoolLimit` is reached, session acquiring the socket must wait until there's an available socket being released back into the pool.
    We can control how long session should wait for the socket from pool by `PoolTimeout` (default 0, wait forever). If PoolTimeout is exceeded, the session will receive an `errPoolTimeout`.
-   *=> This is the issue we saw sometimes here in KBTG, when developer forgot to call `session.Close()` to release the underlying socket back to mgo pool and by default, session will wait forever to acquire a socket from the pool. That cause the query to MongoDB being blocked forever and application freeze.*
+   *=> This is the issue we saw sometimes when developer forgot to call `session.Close()` to release the underlying socket back to mgo pool and by default, session will wait forever to acquire a socket from the pool. That cause the query to MongoDB being blocked forever and application freeze.*
    
 3. Clone session: New session will be duplicated same as [2], but instead of acquiring socket from the mgo pool every time, it will try to reuse the socket from the original session first if possible. 
    So, depending on the status of the original session's socket, the behavior of the cloned session can be same as fixed session [1] or copy session [2].
