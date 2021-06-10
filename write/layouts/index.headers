@@ -2,7 +2,7 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-XSS-Protection: 1; mode=block
-  Content-Security-Policy: default-src 'self' www.lnquy.com; manifest-src 'self' www.lnquy.com; connect-src 'self' www.lnquy.com; font-src 'self' www.lnquy.com; img-src 'self' www.lnquy.com data:; script-src 'self' www.lnquy.com; style-src 'self' www.lnquy.com
+  Content-Security-Policy: default-src 'self'
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin
   Feature-Policy: geolocation 'self'
