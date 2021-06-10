@@ -9,7 +9,7 @@ languageCode = "en-US"
 paginate = 10
 rssLimit = 10
 breadCrumb = true
-highlight = true
+highLight = true
 
 # add redirects/headers
 [outputs]
@@ -58,7 +58,7 @@ rel  = "sitemap"
       unsafe = true
   [markup.highlight]
     codeFences = true
-    guessSyntax = false
+    guessSyntax = true
     hl_Lines = ""
     lineNoStart = 1
     lineNos = true
@@ -66,6 +66,8 @@ rel  = "sitemap"
     noClasses = false
     style = "dracula"
     tabWidth = 4
+    anchorLineNos = true
+    lineAnchors = ""
 
 [sitemap]
   changefreq = "weekly"

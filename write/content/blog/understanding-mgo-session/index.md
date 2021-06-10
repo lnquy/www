@@ -65,7 +65,7 @@ Let's say we have a REST API that calls to MongoDB to read some data then return
 | Cons                                          | - Performs really bad under high load or high concurrent environment.<br />- Cannot use all the possible performance from the system (socket bottleneck). | - Socket leak if forget to call session.Close()<br />- Can fill up the pool too quickly under burst load.<br />After pool filled up, throughput drop and latency increase.<br />- Need to understand the pool internal and its configs to use it best. | - Socket leak if forget to call session.Close().<br />- Hardest to use, must be careful and understand clearly what are you using cloned sessions for.<br />- Performance drop after pool filled up too.<br />- Need to understand the pool internal and its configs to use it best. |
 | Good use at                                   | Low load or low concurrency<br />E.g.: batch job, short live simple read-only query, queries need to run in serial. | - High load and high concurrency.<br />- Long live requests that need it own socket (may have to wait for long processing and transport time). | - Both low/high load and concurrency environments.<br />- When want more control and flexible on how socket should be acquired/reused. |
 
-#### 2.3. ==Best practices==
+#### 2.3. Best practices
 
 1. Avoid fixed session for APIs (HTTP handler), as it's the high concurrent environment (each HTTP request is being served in a separated goroutine).
 2. Make sure to understand and have good care on `DialInfo` config, especially pool configs if you're going to use `Copy()` and `Clone()`.
@@ -84,7 +84,7 @@ Let's say we have a REST API that calls to MongoDB to read some data then return
 
 ##### 3.1.1. Run test with 1 workers queries 10000 times each, poolSize=10.
 
-```log
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 1 --query 10000 --db-pool-size 10 --stats
 2021/06/03 15:16:08 ----- ONE FIXED SESSION -----
 2021/06/03 15:16:08 connecting to MongoDB at: mongo1:30001,mongo2:30002,mongo3:30003
@@ -121,7 +121,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 ##### 3.1.2 Run test with 10 workers queries 5000 times each, poolSize=4096.
 
-```log
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 10 --query 5000 --db-pool-size 4096 --stats
 2021/06/03 15:30:19 ----- ONE FIXED SESSION -----
 2021/06/03 15:30:19 connecting to MongoDB at: mongo1:30001,mongo2:30002,mongo3:30003
@@ -154,7 +154,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 ##### 3.2.1 Run test with 10 workers queries 5000 times each, poolSize=4096.
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 10 --query 5000 --db-pool-size 4096 --stats
 2021/06/03 15:44:16 ----- SESSION COPY -----
 2021/06/03 15:44:16 connecting to MongoDB at: mongo1:30001,mongo2:30002,mongo3:30003
@@ -185,7 +185,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 ##### 3.2.2 Run test with 100 workers queries 3000 times each, poolSize=50 => Reach PoolLimit
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 100 --query 3000 --db-pool-size 50 --stats
 2021/06/03 15:52:59 ----- SESSION COPY -----
 2021/06/03 15:52:59 connecting to MongoDB at: mongo1:30001,mongo2:30002,mongo3:30003
@@ -228,7 +228,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 ##### 3.3.1. Run test with 10 workers queries 5000 times each, poolSize=4096, initialize original session after dial => masterSocket is ready => Same behavior and performance as fixed session [1]
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 10 --query 5000 --db-pool-size 4096 --stats --session-first-ping
 2021/06/03 16:01:22 ----- SESSION CLONE -----
 2021/06/03 16:01:22 connecting to MongoDB at: mongo1:30001,mongo2:30002,mongo3:30003
@@ -266,7 +266,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 ##### 3.3.2 Run test with 10 workers queries 5000 times each, poolSize=4096, no session initialize after dial => masterSocket is nil => Same behavior and performance as copy session [2]
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 10 --query 5000 --db-pool-size 4096 --stats
 2021/06/03 16:08:20 ----- SESSION CLONE -----
 2021/06/03 16:08:20 connecting to MongoDB at: mongo1:30001,mongo2:30002,mongo3:30003
@@ -296,7 +296,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 When we don't have much concurrent queries (or low load), all 3 approaches are the same, poolSize or session initialization after dial doesn't matter.
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 1 --query 30000 --db-pool-size 10 --session-first-ping
 2021/06/03 16:17:30 >>> FIXED(30000): 37.7461335s
 2021/06/03 16:18:13 >>> CLONE(30000): 37.8782305s
@@ -315,7 +315,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 When the number of concurrent users and load increase, copy and clone (on original session with nil socket) session performs much better than fixed session (bottle neck because of not having enough socket).
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 10 --query 10000 --db-pool-size 4096
 2021/06/03 19:20:11 >>> FIXED(100000): 32.9913647s
 2021/06/03 19:20:41 >>> CLONE(100000): 24.7644142s
@@ -334,7 +334,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 Using clone on an original session with established socket will make the behavior and performance the same as fixed session. Be careful while using clone session and make sure you know exactly what you're doing.
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 50 --query 10000 --db-pool-size 4096 --session-first-ping
 2021/06/03 19:37:55 *session-first-ping flag enabled, the original session should have masterSocket ready after calling Ping()
 2021/06/03 19:40:19 >>> FIXED(500000): 2m18.8847601s
@@ -344,7 +344,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 Depends on the PoolLimit and contentions, copy and clone performance can suffer serious degradation. Make sure to take a good care of pool configs to cope with actual work load.
 
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 100 --query 5000 --db-pool-size 50
 2021/06/03 20:33:27 >>> FIXED(500000): 2m27.6266815s
 2021/06/03 20:34:13 >>> CLONE(500000): 40.4432206s
@@ -665,7 +665,7 @@ func stopStats(ctxCancel context.CancelFunc) {
 }
 ```
 5. Run the tests
-```
+```shell
 $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 100 --query 5000 --db-pool-size 4096 --stats --session-first-ping
 ```
 

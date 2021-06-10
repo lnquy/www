@@ -60,3 +60,15 @@ pre code:hover {
 pre code::-webkit-scrollbar-thumb:hover {
   background: $gray-200;
 }
+
+pre code span.ln {
+  color: $gray-700;
+  padding-right: 1.25rem;
+  /* Non selectable text */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
