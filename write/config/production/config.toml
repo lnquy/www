@@ -1,2 +1,5 @@
-baseurl = "/"
+baseurl = "https://lnquy.com/"
+# Generate links in the site with canonical URL (baseURL/*) to help SEO.
+# But this makes the website can only accessable via the baseURL only.
+# If we access it via Netlify URL the resource will fail to be load because of CORS. 
 canonifyURLs = true
