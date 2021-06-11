@@ -5,16 +5,22 @@
       <h1 class="mt-0">{{ .Title }}</h1>
     </div>
     <div class="col-lg-9 col-xl-8 text-center">
-      <p class="lead">{{ .Params.lead | safeHTML }}</p>
-      <a class="btn btn-primary btn-lg px-4 mb-2" href="{{ "docs/prologue/introduction/" | relURL }}" role="button">Get started</a>
-      <p class="meta">Open-source MIT Licensed. <a href="https://github.com/h-enk/doks">GitHub v{{ .Site.Data.doks.version }}</a></p>
+      <!-- <p class="lead">{{ .Params.lead | safeHTML }}</p> -->
+      <p class="lead">
+        Welcome to my personal blog, where I rant about things I had faced and learned in daily life.<br>There will be both good and bullsh*t posts.<br>You have been warned.
+      </p>
+      <a class="btn btn-primary btn-lg px-4 mb-2" href="{{ "/blog" | relURL }}" role="button">Get started</a>
+      <!-- <p class="meta">Open-source MIT Licensed. <a href="https://github.com/h-enk/doks">GitHub v{{ .Site.Data.doks.version }}</a></p> -->
     </div>
   </div>
 </section>
 {{ end }}
 
 {{ define "sidebar-prefooter" }}
-<section class="section section-sm">
+<!-- Temporary spacer that do nothing for now -->
+<div style="min-height: 300px"></div>
+
+<!-- <section class="section section-sm">
   <div class="container">
     <div class="row justify-content-center text-center">
       <div class="col-lg-5">
@@ -45,7 +51,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 {{ end }}
 
 {{ define "sidebar-footer" }}

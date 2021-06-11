@@ -8,8 +8,6 @@ enableRobotsTXT = true
 languageCode = "en-US"
 paginate = 10
 rssLimit = 10
-breadCrumb = true
-highLight = true
 
 # add redirects/headers
 [outputs]

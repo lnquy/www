@@ -1,7 +1,7 @@
 ---
 title: "Understanding Mgo Session"
 description: "How Go's mgo session should be handled. Read section 1, 2, 4 for general understanding and best practices. Other sections for deep dive."
-lead: ""
+lead: "How Go's mgo session should be handled. Read section 1, 2, 4 for general understanding and best practices. Other sections for deep dive."
 date: 2021-06-08T21:27:10+07:00
 lastmod: 2021-06-08T21:27:10+07:00
 draft: false
