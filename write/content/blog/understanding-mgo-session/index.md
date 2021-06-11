@@ -407,7 +407,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
 
 3. Build mgo_session app: `CGO_ENABLED=0 GO_OS=linux GO_ARCH=adm64 go build -o mgo_session main.go`
 
-  ```go
+```go
 // main.go
 package main
 
@@ -654,20 +654,20 @@ func stopStats(ctxCancel context.CancelFunc) {
   ```
 
 4. Insert some mock data into MongoDB, may need to add indexing on `type` and `created_at` field too.
-```json
-// A mock document in cipher_texts collection
-{
-  "_id" : ObjectId("5f7c162530dc040001046c28"),
-  "type" : "N2K_INTERNAL",
-  "name" : "my-key",
-  "cipher_text" : "xoYWG5ZcAAkMaoFbcX21PMdhNFxGq1laaUkU8Dbs715uxLfyh5DfHfS8FzejaAZQ",
-  "created_at" : ISODate("2021-06-02T07:00:53.338Z")
-}
-```
+   ```json
+	// A mock document in cipher_texts collection
+	{
+	"_id" : ObjectId("5f7c162530dc040001046c28"),
+	"type" : "N2K_INTERNAL",
+	"name" : "my-key",
+	"cipher_text" : "xoYWG5ZcAAkMaoFbcX21PMdhNFxGq1laaUkU8Dbs715uxLfyh5DfHfS8FzejaAZQ",
+	"created_at" : ISODate("2021-06-02T07:00:53.338Z")
+	}
+   ```
 5. Run the tests
-```shell
-$ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 100 --query 5000 --db-pool-size 4096 --stats --session-first-ping
-```
+   ```shell
+	$ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchTest --db-username "" --db-password "" --worker 100 --query 5000 --db-pool-size 4096 --stats --session-first-ping
+   ```
 
 ### 6. How to read/trace mgo library code?
 

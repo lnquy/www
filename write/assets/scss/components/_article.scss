@@ -1,0 +1,81 @@
+article p, 
+article th, 
+article td, 
+article li {
+    color: rgba(0,0,0,0.8);
+}
+
+body.dark article p, 
+body.dark article th, 
+body.dark article td, 
+body.dark article li {
+    color: rgba(255,255,255,0.75);
+}
+
+body.dark article pre {
+    opacity: 0.8;
+}
+
+article p.lead {
+    font-family: 'Source Serif Pro';
+    font-size: $font-size-base+0.3rem;
+    line-height: 2rem;
+    text-align: center;
+}
+
+// Table
+article table, 
+article table th, 
+article table td  {
+    border: 1px solid #e6ecf1;
+}
+
+article table th {
+    border-bottom: solid 2px #e6ecf1;
+}
+
+.table > :not(:last-child) > :last-child > *, 
+table > :not(:last-child) > :last-child > * {
+    border-bottom-color: #e6ecf1;
+}
+
+// Dark
+body.dark article table, 
+body.dark article table th, 
+body.dark article table td  {
+    border: 1px solid #333;
+}
+
+body.dark article table th {
+    border-bottom: solid 2px #333;
+}
+
+body.dark .table > :not(:last-child) > :last-child > *, 
+body.dark table > :not(:last-child) > :last-child > * {
+    border-bottom-color: #333;
+}
+// End table
+
+article p, 
+article td, 
+article li {
+   font-size: $font-size-base+0.1rem; 
+   line-height: 1.7rem;
+}
+
+article ul li, 
+article ol li {
+    margin-bottom: 5px;
+}
+
+article h3 {
+    line-height: 2.2rem;
+}
+
+article h5 {
+    line-height: 1.85rem;
+}
+
+article img {
+    border-radius: 0.25rem;
+}
