@@ -399,7 +399,7 @@ $ mgo_session --db-addrs mongo1:30001,mongo2:30002,mongo3:30003 --db-name BenchT
    
 2. Add MongoDB host to hosts file:
 
-   ```
+   ```txt
    127.0.0.1 mongo1
    127.0.0.1 mongo2
    127.0.0.1 mongo3
