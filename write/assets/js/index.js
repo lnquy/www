@@ -36,6 +36,16 @@ document.addEventListener('keydown',suggestionFocus);
 
 function suggestionFocus(e){
 
+  // Page scroll by Command+Up/Down combination on MacOS
+  if (e.metaKey) {
+    if (e.keyCode === 38) {
+      window.scrollTo(0, 0);
+    } else if (e.keyCode === 40) {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+    return 
+  }
+
   const focusableSuggestions= suggestions.querySelectorAll('a');
   const focusable= [...focusableSuggestions];
   const index = focusable.indexOf(document.activeElement);

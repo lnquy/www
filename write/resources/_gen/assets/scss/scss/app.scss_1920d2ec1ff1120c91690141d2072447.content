@@ -9574,8 +9574,7 @@ h4, h5, h6, .h4, .h5, .h6 {
 
 @media (min-width: 768px) {
   body {
-    font-size: 1.125rem;
-    padding-top: 4rem !important; }
+    font-size: 1.125rem; }
   h1,
   h2,
   h3,
@@ -9623,9 +9622,6 @@ a.btn:focus,
   vertical-align: text-top;
 }
 */
-body {
-  padding-top: 3.5625rem; }
-
 .docs-sidebar {
   order: 2; }
 
@@ -10665,6 +10661,9 @@ table {
 .navbar .menu-btn:checked ~ .menu-icon:not(.steps) .navicon::before,
 .navbar .menu-btn:checked ~ .menu-icon:not(.steps) .navicon::after {
   top: 0; }
+
+#suggestions {
+  z-index: 99; }
 
 .docs-content > h2[id]::before, .docs-content > .h2[id]::before,
 .docs-content > h3[id]::before,

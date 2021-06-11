@@ -36,7 +36,7 @@ h4, h5, h6, .h4, .h5, .h6 {
 @include media-breakpoint-up(md) {
   body {
     font-size: $font-size-md;
-    padding-top: 4rem !important;
+    // padding-top: 4rem !important;
   }
 
   h1,
@@ -94,9 +94,10 @@ a.btn:focus {
 }
 */
 
-body {
-  padding-top: 3.5625rem;
-}
+// Re-enable it in-case using fixed header
+// body {
+//   padding-top: 3.5625rem;
+// }
 
 .docs-sidebar {
   order: 2;
