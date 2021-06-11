@@ -19,9 +19,8 @@ For simplicity, let's assume we're using `Strong/Primary` consistency mode, so e
 
 There're 3 ways of using session when sending queries to the MongoDB: Use the same fixed session every time [1], copy the original session every time [2] and clone the original session every time [3] as figure 1.
 
-<div style="text-align: center">
-<img src="img/code.jpg" alt="Code" style="zoom:60%;" />
-<p style="font-size: 12px; font-style: italic">Figure 1: Three ways to use mgo session</p>
+<div class="text-center">
+{{< img src="img/code.jpg" alt="Code" caption="<em>Figure 1: Three ways to use mgo session</em>" class="border-0" >}}
 </div>
 
 ### 2. What is the differences between 3 approaches?  

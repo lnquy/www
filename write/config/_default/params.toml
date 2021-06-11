@@ -29,11 +29,13 @@ siteLinksSearchBox = false
 themeColor = "#fff"
 
 # Images
-quality = 85
 bgColor = "#fff"
-landscapePhotoWidths = [900, 800, 700, 600, 500]
+landscapePhotoWidths = [1000, 900, 800, 700, 600, 500]
 portraitPhotoWidths = [800, 700, 600, 500]
 lqipWidth = "20x"
+# %dx is the width size of image src, which will be fill-in by Hugo later.
+# q85 is the quality of resized images.
+imageResizeQuality = "%dx q75"
 
 # Footer
 footer = "Quy Le © 2021. Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a> and <a href=\"https://getdoks.org/\">Doks</a>"
