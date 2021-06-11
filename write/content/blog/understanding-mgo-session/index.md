@@ -4,6 +4,7 @@ description: "How Go's mgo session should be handled. Read section 1, 2, 4 for g
 lead: "How Go's mgo session should be handled. Read section 1, 2, 4 for general understanding and best practices. Other sections for deep dive."
 date: 2021-06-08T21:27:10+07:00
 lastmod: 2021-06-08T21:27:10+07:00
+toc: true
 draft: false
 weight: 50
 images: ["understanding-mgo-session.jpg"]

@@ -1,4 +1,4 @@
-{{ if ne .Params.toc false -}}
+{{ if and (.Params.toc) (gt .WordCount 400)  -}}
   <div class="page-links">
     <h3>On this page</h3>
     {{ .TableOfContents }}

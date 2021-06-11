@@ -66,6 +66,11 @@ rel  = "sitemap"
     tabWidth = 4
     anchorLineNos = true
     lineAnchors = ""
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+
 
 [sitemap]
   changefreq = "weekly"

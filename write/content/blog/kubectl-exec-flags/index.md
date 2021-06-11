@@ -5,6 +5,7 @@ lead: "What exactly does -t and -i flags in kubectl exec means?"
 date: 2021-06-08T21:41:47+07:00
 lastmod: 2021-06-08T21:41:47+07:00
 draft: false
+toc: false
 weight: 50
 images: []
 contributors: ['quy-le']

@@ -47,7 +47,6 @@ docsRepo = "https://github.com/lnquy/www"
 editPage = false
 
 [options]
-  toc = true
   lazySizes = true
   clipBoard = true
   instantPage = true
