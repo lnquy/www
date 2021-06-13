@@ -271,7 +271,7 @@ func hasBit(n byte, pos byte) bool {
 
 In order to save up memory, we have to do more calculation to figure out the location of checking bit. Benchmark shows that we are 1.3 times slower than direct access on array index in exchange of 8 times lower in memory, which is a good deal. 
 
-```go
+```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
 BenchmarkCheckCountryCode/_cantor_bitmap_hit            348379489                3.41 ns/op
 BenchmarkCheckCountryCode/_cantor_bitmap_miss           352474602                3.41 ns/op
