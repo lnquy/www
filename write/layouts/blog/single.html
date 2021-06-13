@@ -12,7 +12,7 @@
         <h1>{{ .Title }}</h1>
         {{ partial "main/blog-meta.html" . }}
       </div>
-      <p class="lead">{{ .Params.Description | safeHTML }}</p>
+      <p class="lead">{{ .Params.Lead | safeHTML }}</p>
       
       <!-- {{ partial "main/headline-hash.html" .Content }} -->
       {{ .Content }}
