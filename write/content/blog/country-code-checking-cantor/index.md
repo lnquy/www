@@ -4,7 +4,7 @@ description: "A (not so) simple but very efficient way to check country code (~4
 lead: "Solutions are presented from the easiest to harder for implementation. You can jump directly to section 4 for Cantor Pairing solution."
 date: 2021-06-13T12:08:12+07:00
 lastmod: 2021-06-13T12:08:12+07:00
-draft: true
+draft: false
 weight: 50
 images: ["country-code-checking-cantor.jpg"]
 contributors: ['quy-le']
