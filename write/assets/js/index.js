@@ -1,3 +1,6 @@
+// Configure the maximum number of search results you want to render here.
+const resultNumToShow = 5;
+
 var suggestions = document.getElementById('suggestions');
 var userinput = document.getElementById('userinput');
 
@@ -73,25 +76,26 @@ Source:
 */
 
 (function(){
+  let indexingFields = [
+    'title',
+    'description',
+    'content',
+    'tags'
+  ]
 
-  var index = new FlexSearch({
-    preset: 'score',
-    cache: true,
-    doc: {
+  let docIndex = new FlexSearch.Document({
+    tokenize: "forward",
+    optimize: true,
+    resolution: 9,
+    cache: 100,
+    worker: false,
+    document: {
         id: 'id',
-        field: [
-          'title',
-          'description',
-          'content',
-        ],
-        store: [
-          'href',
-          'title',
-          'description',
-        ],
+        index: indexingFields
     },
   });
 
+  // Build the list of all posts
   var docs = [
     {{ range $index, $page := (where .Site.Pages "Section" "blog") -}}
       {
@@ -99,58 +103,90 @@ Source:
         href: "{{ .RelPermalink | relURL }}",
         title: {{ .Title | jsonify }},
         description: {{ .Params.description | jsonify }},
-        content: {{ .Content | jsonify }}
+        content: {{ .Content | jsonify }},
+        tags: {{ .Params.tags | jsonify }},
       },
     {{ end -}}
   ];
 
-  index.add(docs);
+  // Normalize data before submit it into the indexing.
+  // Generated posts may missing metadata like tags, categories.
+  for (let i in docs) {
+    if (!docs[i].tags) {
+      docs[i].tags = []
+    }
+
+    // Indexing
+    // console.log("DOC:", docs[i])
+    docIndex.add(docs[i])
+  }
+
+  // console.log("INDEX:", docIndex);
+  // let res = docIndex.search("totoro", {index: ["tags"]});
+  // console.log("res", res)
+  // console.log("store", docs[res[0].result[0]])
 
   userinput.addEventListener('input', show_results, true);
   suggestions.addEventListener('click', accept_suggestion, true);
 
   function show_results(){
-
     var value = this.value;
-    var results = index.search(value, 5);
-    var entry, childs = suggestions.childNodes;
-    var i = 0, len = results.length;
+    var results = docIndex.search(value, {
+      index: indexingFields,
+      limit: resultNumToShow,
+      offset: 0
+    });
+    // console.log("searchResult", results);
+
+    if (!results || !results.length) {
+      suggestions.innerHTML = ''; // TODO: Clear previous search result
+      return
+    }
+    // Normalize returned results before rendering
+    // hitMap[docId] = numberOfHits
+    let hitMap = new Map();
+    results.forEach(hit => {
+      hit.result.forEach(docId => {
+        let hitNum = hitMap.has(docId) ? hitMap.get(docId) : 0
+        hitMap.set(docId, ++hitNum)
+      })
+    })
+    // console.log('hitMap', hitMap)
+    // Prioritize the page with more hits (descending)
+    let hitMapDesc = new Map([...hitMap.entries()].sort((a, b) => {
+      return b[1] - a[1]
+    }))
+    // console.log('hitMapDesc', hitMapDesc)
 
     suggestions.classList.remove('d-none');
+    suggestions.innerHTML = ''; // TODO: Clear previous search result
 
-    results.forEach(function(page) {
-
-      entry = document.createElement('div');
-
+    let renderedEntries = 0;
+    for (let docId of hitMapDesc.keys()) { 
+      let entry = document.createElement('div');
       entry.innerHTML = '<a href><span></span><span></span></a>';
+      let a = entry.querySelector('a');
+      let t = entry.querySelector('span:first-child');
+      let d = entry.querySelector('span:nth-child(2)');
 
-      a = entry.querySelector('a'),
-      t = entry.querySelector('span:first-child'),
-      d = entry.querySelector('span:nth-child(2)');
-
+      let page = docs[docId];
       a.href = page.href;
       t.textContent = page.title;
       d.textContent = page.description;
 
       suggestions.appendChild(entry);
 
-    });
-
-    while(childs.length > len){
-
-        suggestions.removeChild(childs[i])
+      if (++renderedEntries > resultNumToShow) {
+        break
+      }
     }
-
   }
 
   function accept_suggestion(){
-
-      while(suggestions.lastChild){
-
-          suggestions.removeChild(suggestions.lastChild);
-      }
-
-      return false;
+    while(suggestions.lastChild){
+      suggestions.removeChild(suggestions.lastChild);
+    }
+    return false;
   }
 
 }());

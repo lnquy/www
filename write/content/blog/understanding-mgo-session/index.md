@@ -1,7 +1,7 @@
 ---
 title: "Understanding Mgo Session"
-description: "How Go's mgo session should be handled. Read section 1, 2, 4 for general understanding and best practices. Other sections for deep dive."
-lead: "How Go's mgo session should be handled. Read section 1, 2, 4 for general understanding and best practices. Other sections for deep dive."
+description: "Understand how the underlying socket of mgo session can be acquired and best practices."
+lead: "Read section 1, 2, 4 for general understanding and best practices, other sections for deep dive."
 date: 2021-06-08T21:27:10+07:00
 lastmod: 2021-06-08T21:27:10+07:00
 toc: true
@@ -9,8 +9,9 @@ draft: false
 weight: 50
 images: ["understanding-mgo-session.jpg"]
 contributors: ['quy-le']
+tags: ['go', 'golang', 'mgo', 'mongodb', 'session', 'socket pool']
+categories: []
 ---
-
 ### 1. Session usage
 
 In Go's [mgo](https://github.com/globalsign/mgo), to connect and send queries to MongoDB, we have to establish a session first. 

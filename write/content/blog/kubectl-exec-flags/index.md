@@ -1,7 +1,7 @@
 ---
 title: "Kubectl Exec Flags"
-description: "What exactly does -t and -i flags in kubectl exec means?"
-lead: "What exactly does -t and -i flags in kubectl exec means?"
+description: "What exactly does the -t and -i flags in kubectl exec means?"
+lead: "What exactly does the -t and -i flags in kubectl exec means?"
 date: 2021-06-08T21:41:47+07:00
 lastmod: 2021-06-08T21:41:47+07:00
 draft: false
@@ -9,6 +9,8 @@ toc: false
 weight: 50
 images: []
 contributors: ['quy-le']
+categories: []
+tags: ['k8s', 'kubernetes', 'kubectl', 'cli', 'flag', 'tty', 'file descriptor']
 ---
 
 ```shell
