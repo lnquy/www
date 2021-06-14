@@ -1,4 +1,3 @@
-// Advanced Cantor Pair Mapping
 package main
 
 import (
@@ -15,22 +14,21 @@ var (
 		"pg,ph,pk,pl,pm,pn,pr,ps,pt,pw,py,qa,re,ro,rs,ru,rw,sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,ss,st,sv,sy," +
 		"sz,tc,td,tf,tg,th,tj,tk,tl,tm,tn,to,tr,tt,tv,tw,tz,ua,ug,um,us,uy,uz,va,vc,ve,vg,vi,vn,vu,wf,ws,ye,yt,za,zm,zw"
 
-	// Max Cantor pair: p(z, z) ~= p(25, 25) ~= 1300 bits ~= 163 bytes
-	bitMap = make([]byte, 163)
-
-	ccArr = make([]string, 247)
+	ccArr = make([]string, 247, 247)
 
 	ccMap    = make(map[string]struct{}, 247)
 	ccNumMap = make(map[uint16]struct{}, 247)
 
-	directArr = make([]bool, 1301, 1301)
+	byteArr = make([]bool, 1301, 1301)
+	// Max Cantor pair: p(z, z) ~= p(25, 25) ~= 1300 bits ~= 163 bytes
+	bitMap = make([]byte, 163, 163)
 )
 
 func init() {
 	ccs := strings.Split(countryCodes, ",")
 	for _, cc := range ccs {
 		idx := cantorPair(cc)
-		directArr[idx] = true
+		byteArr[idx] = true
 		bitMap[idx/8] = setBit(bitMap[idx/8], byte(idx%8))
 
 		ccMap[cc] = struct{}{}
@@ -39,33 +37,7 @@ func init() {
 	ccArr = ccs
 }
 
-func IsCountryCodeByDirectCantor(input string) bool {
-	return directArr[cantorPair(input)]
-}
-
-func IsCountryCodeByACPM(input string) bool {
-	idx := cantorPair(input)
-	return hasBit(bitMap[idx/8], byte(idx%8))
-}
-
-func cantorPair(input string) uint16 {
-	k1 := uint16(input[0] - 97) // Reduce unnecessary gap from ASCII [0:97]
-	k2 := uint16(input[1] - 97)
-	return uint16(((k1+k2)*(k1+k2+1))/2 + k2)
-}
-
-// Sets the bit at pos in the byte n.
-func setBit(n byte, pos byte) byte {
-	n |= (1 << pos)
-	return n
-}
-
-// Checks the bit at pos in the byte n.
-func hasBit(n byte, pos byte) bool {
-	return (n & (1 << pos)) > 0
-}
-
-// --------------
+// IsCountryCodeByArray checks if the given input matches any item in the ccArr array.
 func IsCountryCodeByArray(input string) bool {
 	for _, cc := range ccArr {
 		if cc == input {
@@ -75,7 +47,7 @@ func IsCountryCodeByArray(input string) bool {
 	return false
 }
 
-// --------------
+// IsCountryCodeByMapString checks if the given input exists in the ccMap or not.
 func IsCountryCodeByMapString(input string) bool {
 	_, ok := ccMap[input]
 	return ok
@@ -84,6 +56,39 @@ func IsCountryCodeByMapString(input string) bool {
 func IsCountryCodeByMapInt(input string) bool {
 	_, ok := ccNumMap[cantorPair(input)]
 	return ok
+}
+
+// IsCountryCodeByCantorPairing uses Cantor pairing to calculate the index of the given string
+// in the ccArray array.
+func IsCountryCodeByCantorPairing(input string) bool {
+	return byteArr[cantorPair(input)]
+}
+
+// IsCountryCodeByCantorPairing uses Cantor pairing to calculate the index of the given string
+// in the bitmap.
+func IsCountryCodeByCantorBitmap(input string) bool {
+	idx := cantorPair(input)
+	return hasBit(bitMap[idx/8], byte(idx%8))
+}
+
+// cantorPair returns a unique number for the given input using Cantor pairing function.
+func cantorPair(input string) uint16 {
+	// Reduce unnecessary gap from ASCII [0:97]
+	// e.g.: 'a' (97) => (0), 'z' (122) => (25)
+	k1 := uint16(input[0] - 97)
+	k2 := uint16(input[1] - 97)
+	return uint16(((k1+k2)*(k1+k2+1))/2 + k2)
+}
+
+// setBit sets the bit at pos in the byte n.
+func setBit(n byte, pos byte) byte {
+	n |= (1 << pos)
+	return n
+}
+
+// hasBit checks the bit at pos in the byte n.
+func hasBit(n byte, pos byte) bool {
+	return (n & (1 << pos)) > 0
 }
 
 func detailCantor(k1, k2 int) int {
