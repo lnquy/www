@@ -19,8 +19,8 @@ func BenchmarkCheckCountryCode(b *testing.B) {
 		{name: formatName("array_naive"), f: IsCountryCodeByArray},
 		{name: formatName("map_string"), f: IsCountryCodeByMapString},
 		// {name: formatName("map_number"), f: IsCountryCodeByMapInt},
-		{name: formatName("cantor_pairing"), f: IsCountryCodeByDirectCantor},
-		{name: formatName("cantor_bitmap"), f: IsCountryCodeByACPM},
+		{name: formatName("cantor_pairing"), f: IsCountryCodeByCantorPairing},
+		{name: formatName("cantor_bitmap"), f: IsCountryCodeByCantorBitmap},
 	}
 
 	for _, benchFunc := range funcs {
@@ -42,7 +42,20 @@ func BenchmarkCheckCountryCode(b *testing.B) {
 	}
 }
 
-func TestCantorUnique(t *testing.T) {
+func TestIsCountryCodeByCantorPairing(t *testing.T) {
+	for c1 := 'a'; c1 <= 'z'; c1++ {
+		for c2 := 'a'; c2 <= 'z'; c2++ {
+			input := string(c1) + string(c2)
+			got := IsCountryCodeByCantorPairing(input)
+			if expected := IsCountryCodeByMapString(input); got != expected {
+				t.Errorf("IsCountryCodeByCantorPairing(%q)=%v, expected %v", input, got, expected)
+				return
+			}
+		}
+	}
+}
+
+func TestCantorUniqueness(t *testing.T) {
 	m := make(map[int]string, 26*26)
 
 	for c1 := 'a'; c1 <= 'z'; c1++ {

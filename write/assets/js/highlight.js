@@ -4,7 +4,7 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import json from 'highlight.js/lib/languages/json';
 import bash from 'highlight.js/lib/languages/bash';
 import shell from 'highlight.js/lib/languages/shell';
-import htmlbars from 'highlight.js/lib/languages/htmlbars';
+import htmlbars from 'highlight.js/lib/languages/handlebars';
 import ini from 'highlight.js/lib/languages/ini';
 import yaml from 'highlight.js/lib/languages/yaml';
 import markdown from 'highlight.js/lib/languages/markdown';

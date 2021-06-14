@@ -12,14 +12,14 @@ body.dark article li {
     color: rgba(255,255,255,0.75);
 }
 
-body.dark article pre {
-    opacity: 0.8;
-}
+// body.dark article pre {
+//     opacity: 0.8;
+// }
 
 article p.lead {
     font-family: 'Source Serif Pro';
-    font-size: $font-size-base+0.3rem;
-    line-height: 2rem;
+    font-size: $font-size-base+0.35rem;
+    line-height: 2.2rem;
     text-align: center;
 }
 
@@ -59,8 +59,8 @@ body.dark table > :not(:last-child) > :last-child > * {
 article p, 
 article td, 
 article li {
-   font-size: $font-size-base+0.1rem; 
-   line-height: 1.7rem;
+   font-size: $font-size-base+0.2rem; 
+   line-height: 1.8rem;
 }
 
 article ul li, 

@@ -15,7 +15,7 @@ tags: ['cantor pairing', 'country code', 'data structure', 'algorithm', 'perfect
 
 ### 1. Problem
 
-When I first started working as a developer I used to work with Domain Name System (DNS) and got a task to detect if the [top-level-domain](https://en.wikipedia.org/wiki/List_of_Internet_top-level_domains) of a DNS record is an internationalized country code or not.  
+When I first started working as a developer I used to work with Domain Name System (DNS) and got a task to detect if the [top-level-domain](https://en.wikipedia.org/wiki/List_of_Internet_top-level_domains) of a DNS record is a country-code type or not.  
 For example:
 
 ```txt
@@ -24,7 +24,8 @@ ddc.moph.go.th => true (Thailand)
 google.com => false
 mozilla.org => false
 ```
-The logic here is to check if the last part of the domain belongs to the list of [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country codes. Let's assume we already did other validations and string manipulations to get the last 2 characters (ASCII, assuming again) from the domain.  
+The logic here is to check if the last part after dot of the domain belongs to the list of [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country codes.  
+Let's assume we already did other validations and string manipulations to get the last 2 characters (lowercase ASCII, assuming again) from the domain.  
 **How can we detect if the 2-character-input is a country code or not?**
 
 ```go
@@ -37,7 +38,7 @@ var countryCodes = "ad,ae,af,ag,ai,al,am,an,ao,aq,ar,as,at,au,aw,ax,az,ba,bb,bd,
 "pg,ph,pk,pl,pm,pn,pr,ps,pt,pw,py,qa,re,ro,rs,ru,rw,sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,ss,st,sv,sy," +
 "sz,tc,td,tf,tg,th,tj,tk,tl,tm,tn,to,tr,tt,tv,tw,tz,ua,ug,um,us,uy,uz,va,vc,ve,vg,vi,vn,vu,wf,ws,ye,yt,za,zm,zw"
 
-// input is the 2 ASCII characters (e.g: aa, gg, nz, op, vn, zz)
+// input is the 2 lowercase ASCII characters (e.g: aa, gg, nz, op, vn, zz)
 func IsCountryCode(input string) bool {
   // TODO: Implement logic for this function
 }
@@ -78,7 +79,7 @@ func IsCountryCodeByArray(input string) bool {
 This solution is simple and in fact really fast if the input string is in the couple of first country codes. For example: `IsCountryCodeByArray("ad")` only takes 1 array access, `IsCountryCodeByArray("ae")` takes 2 array access an so on.  
 Array access is `O(1)` and really fast, especially if the array can fit into the CPU cache like in this case (more on this in another post).
 
-But this solution is naive because it becomes worse quickly if the input is at the ending part of the `ccArr`, or in the worst case scenario, not existing in the list. In the worst case scenario, we have to traverse over the whole array in order to `return false`.  
+But this solution is naive because it becomes worse quickly if the input is at the ending part of the `ccArr` array, or in the worst case scenario, not existing in the list. In the worst case scenario, we have to traverse over the whole array in order to return false.  
 The benchmark (see test and benchmark code at the end of post) below shows the order of magnitude (150 times) slower in worst case versus happy case.
 
 ```shell
@@ -109,7 +110,7 @@ Algorithm analysis:
 
 ### 3. Generic hashmap solution
 
-A better solution is storing the list of country code in a (hash)map, then in the `IsCountryCodeByMap` function, we only need to check if the `input` is a key in the map or not.
+A better solution is storing the list of country code in a generic (hash)map, then in the `IsCountryCodeByMap` function, we only need to check if the `input` is a key in the map or not.
 
 ```go
 // ccMap holds 247 country codes as the key.
@@ -154,31 +155,30 @@ Algorithm analysis:
 
 ### 4. Cantor pairing solution
 
-As we said above, 99.99% of the time, the hashmap solution above is good enough in real life code.  
-So please see these Cantor solutions as the fun experiments when we try to explore outside of the "normal" border.  
+As we said above, most of the time, the hashmap solution above is good enough in real life code.  
+So please take these Cantor solutions as the fun experiments when we try to explore outside of the "normal" border.  
 
 Let's recap the strong points from two solutions above, array solution has very fast memory access, while map solution provides stable time complexity in both happy and worst cases.  
 How can we combine the advantage of both two solutions into one?
 
-The idea is *somehow we can map each country code into a unique number*, then use that number as the index on the checking array. If we can do so, when checking the country code, we only need 1 array (memory) access for either happy or worst case, which is really fast as shown above.  
-For example: Somehow we can translate the string to number like this: `ad => 1`, `ae => 2`, `af => 3`, ..., `zw => 247`.
+The idea is **somehow we can map each country code into a unique number**, then use that number as the index on the checking array. If we can do so, when checking the country code, we only need 1 array (memory) access for either happy or worst case, which is really fast as shown in the array solution above.  
 
-Experienced readers probably realised that what we're trying to do here is re-implementing a hashmap (hash the country code to the integer key of the map).  
-The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we have fixed 247 country codes as input so it seems like a perfect place.  
+{{< img src="img/diagram-Mapping.jpg" alt="Mapping string to number" caption="<em>Figure 1: Mapping string to number</em>" class="border-0 text-center" >}}
 
-So how we can map each country code into a unique number? A quick research will lead us to the [Cantor pairing function]():
+Experienced readers might realise that what we're trying to do here is re-implementing a hashmap (hash the country code to the integer key of the map).  
+The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we know before hand that the input will ranging from `aa` to `zz` so it seems like a perfect place.  
+
+So how we can map each country code into a unique number here? A quick research will lead us to the [Cantor pairing function](https://en.wikipedia.org/wiki/Pairing_function):
 
 > "In mathematics, a pairing function is a process to **uniquely** encode two natural numbers into a single natural number." - Wikipedia
 
 That's exactly what we're looking for. 
 Let's implement the Cantor pairing function as our PHF which translates the 2 ASCII characters input to a unique number and use it as the array index.  
-Our input is ranging from `aa` to `zz`, which can be translated to the tuple of `[0, 0]` to `[25, 25]`
+Our input is ranging from `aa` to `zz`, which can be translated to the tuple of `[0, 0]` to `[25, 25]`.  We have `cantorPairing("aa") => cantorPairing(0, 0) => 0` and `cantorPairing("zz") => cantorPairing(25, 25) => 1300`, so we will need an array with the size of 1031 to hold all the possible input.
 
 ```go
-// Our input is ranging from `aa` to `zz`, which can be translated to the 
-// tuple of [0, 0] to [25, 25], and cantorPair(25, 25) = 1300 
 // => Size of the checking array.
-var cantorArr = make([]bool, 1300, 1300)
+var cantorArr = make([]bool, 1301, 1301)
 
 func init() {
   // Mark the index of country code in the cantorArr array
@@ -189,12 +189,15 @@ func init() {
 	}
 }
 
+// IsCountryCodeByCantorPairing uses Cantor pairing to calculate the index of the given string
+// in the ccArray array.
 func IsCountryCodeByCantorPairing(input string) bool {
 	idx := cantorPair(input)
 	return cantorArr[idx]
 }
 
-func cantorPair(k1, k2 uint16) uint16 {
+// cantorPair returns a unique number for the given input using Cantor pairing function.
+func cantorPair(input string) uint16 {
   // Reduce unnecessary gap from ASCII [0:97]
   // e.g.: 'a' (97) => (0), 'z' (122) => (25)
   k1 := uint16(input[0] - 97)
@@ -231,6 +234,8 @@ The Cantor pairing solution above is really fast but has one down side is using 
 
 Instead of using 1301 bytes for the checking array, we can operate on bit, so the size required can be reduced by 8 (8 bits makes a byte) to 163 bytes.
 
+{{< img src="img/diagram-CantorBitmap.jpg" alt="Using bitmap instead of byte array" caption="<em>Figure 2: Using bitmap instead of byte array</em>" class="border-0 text-center" >}}
+
 ```go
 // Max Cantor pair: p(z, z) ~= p(25, 25) ~= 1300 bits ~= 163 bytes
 bitMap = make([]byte, 163, 163)
@@ -244,12 +249,15 @@ func init() {
 	}
 }
 
+// IsCountryCodeByCantorPairing uses Cantor pairing to calculate the index of the given string
+// in the bitmap.
 func IsCountryCodeByCantorBitmap(input string) bool {
 	idx := cantorPair(input)
 	return hasBit(bitMap[idx/8], byte(idx%8))
 }
 
-func cantorPair(k1, k2 uint16) uint16 {
+// cantorPair returns a unique number for the given input using Cantor pairing function.
+func cantorPair(input string) uint16 {
   // Reduce unnecessary gap from ASCII [0:97]
   // e.g.: 'a' (97) => (0), 'z' (122) => (25)
   k1 := uint16(input[0] - 97)
@@ -257,13 +265,13 @@ func cantorPair(k1, k2 uint16) uint16 {
 	return uint16(((k1+k2)*(k1+k2+1))/2 + k2)
 }
 
-// Sets the bit at pos in the byte n.
+// setBit sets the bit at pos in the byte n.
 func setBit(n byte, pos byte) byte {
 	n |= (1 << pos)
 	return n
 }
 
-// Checks the bit at pos in the byte n.
+// hasBit checks the bit at pos in the byte n.
 func hasBit(n byte, pos byte) bool {
 	return (n & (1 << pos)) > 0
 }
@@ -286,18 +294,20 @@ Algorithm analysis:
 
 ### 6. Conclusion
 
-- 99.99% of the time, generic hashmap is good enough.
+- Most of the time, generic hashmap is good enough.
+- Small array access can be faster than hashmap, while working with small set of data, maybe it's better to use array. CPU cache matter.
 - When working with fixed input set, it's good time to think about perfect hash function.
-- CPU cache can affect a lot on performance.
 - Test, benchmark and profiling is valuable when optimizing.
-- Microbenchmark most of the time is useless and premature optimization is the root of all evils.
+- Micro-benchmarking is overkill most of the time and premature optimization is the root of all evils [^2].
+- This Cantor pairing PHF can become bloat quickly, e.g. `cantorPairing(500, 500) = 501000`, so it cannot be used as a generic hash function.  
+  What you should take away from this post is the way of solving specific problem only.
 
 Source code:
 
-- [main.go](code/main.go): Implementation of all solutions.
+- [main.go](code/main.go): Implementation for all solutions.
 - [main_test.go](code/main_test.go): Test and benchmark.
 
-Or see it on [Github](https://github.com/lnquy/www/blob/main/write/content/blog/country-code-checking-cantor/code).
+Or see it on [Github](https://github.com/lnquy/www/tree/main/write/content/blog/country-code-checking-cantor/code).
 
 ```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
@@ -315,3 +325,4 @@ BenchmarkCheckCountryCode/_cantor_bitmap_miss           323894680               
 
 [^1]:https://dlintw.github.io/gobyexample/public/memory-and-sizeof.html
 
+[^2]: http://wiki.c2.com/?PrematureOptimization
