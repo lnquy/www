@@ -95,18 +95,18 @@ Algorithm analysis:
 
 - Time complexity: `O(1)`.
   - Best case: Need 1 array (memory) access => O(1).
-  - Worst case: Need 247 array access => O(247).
+  - Worst case: Need 247 array access => O(247) => O(1).
  - Space complexity: `O(1)`.
      - Array has 247 items, each requires 2 bytes (2 ASCII characters) so in total of 494 bytes.  
-        Assuming we're not counting space overhead from the string datastructe here (e.g.: each string in Go has at least 8 bytes overhead [^1]).
+        Assuming we're not counting space overhead from the string/array datastructe here (e.g.: each string in Go has at least 8 bytes overhead [^1]).
 
 > ##### Idea
 >
-> Because the list of country code is alphabetic sorted, you can try to improve this solution by failing-fast while checking the input against the items in `ccArr`.  
+> Because the list of country code is alphabetically sorted, you can try to improve this solution by failing-fast while checking the input against the items in `ccArr`.  
 > For example: `IsCountryCodeByArray("ah")`.  
 > You only need to check until the `ai` item in the `ccArr`, if you reached `ai`, we can be sure that the `ah` input string is not existed in the `ccArr` array.
 >
-> Question: Try to implement and analyze that solution, how much will it improve on the naive solution and on which case it will be as bad as the naive solution?
+> Question: Try to implement and analyze that solution, how much will it improve over the naive solution and on which case it will be as bad as the naive solution?
 
 ### 3. Generic hashmap solution
 
@@ -134,7 +134,7 @@ func IsCountryCodeByMap(input string) bool {
 Even though this solution is slower than the naive array solution above in (some) happy cases.  
 Benchmark result shows a much better result in the worst case scenario.  
 The result in both happy and worst case scenario is so consistent which is why 99.99% of the time this is the only solution you'll need in production code.  
-Noone has ever been fired by using (hash)map, I'm sure.
+Do you know that even Object in Javascript is just a map/dictionary? [^2]
 
 ```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
@@ -151,7 +151,7 @@ Algorithm analysis:
 > ##### Idea
 >
 > The type of the map's key matter, try to use a map with integer key instead of string and check if there is any improvement?  
-> If our map have more items, what is the advantages of integer map over string and what is the possible downsides?
+> If our map has more items, what is the advantages of integer map over string and what is the possible downsides?
 
 ### 4. Cantor pairing solution
 
@@ -165,16 +165,16 @@ The idea is **somehow we can map each country code into a unique number**, then 
 
 {{< img src="img/diagram-Mapping.jpg" alt="Mapping string to number" caption="<em>Figure 1: Mapping string to number</em>" class="border-0 text-center" >}}
 
-Experienced readers might realise that what we're trying to do here is re-implementing a hashmap (hash the country code to the integer key of the map).  
+Experienced readers might realise that what we're trying to do here is re-implementing a hashmap (hash the country code string to the integer key of the map).  
 The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we know before hand that the input will ranging from `aa` to `zz` so it seems like a perfect place.  
 
-So how we can map each country code into a unique number here? A quick research will lead us to the [Cantor pairing function](https://en.wikipedia.org/wiki/Pairing_function):
+So how can we design the PHF to map country code to a unique number? A quick research will lead us to the [pairing function](https://en.wikipedia.org/wiki/Pairing_function):
 
 > "In mathematics, a pairing function is a process to **uniquely** encode two natural numbers into a single natural number." - Wikipedia
 
-That's exactly what we're looking for. 
+That's exactly what we're looking for!  
 Let's implement the Cantor pairing function as our PHF which translates the 2 ASCII characters input to a unique number and use it as the array index.  
-Our input is ranging from `aa` to `zz`, which can be translated to the tuple of `[0, 0]` to `[25, 25]`.  We have `cantorPairing("aa") => cantorPairing(0, 0) => 0` and `cantorPairing("zz") => cantorPairing(25, 25) => 1300`, so we will need an array with the size of 1031 to hold all the possible input.
+Our input is ranging from `aa` to `zz`, which can be translated to the tuple of `[0, 0]` to `[25, 25]`.  We have `cantorPairing("aa") => cantorPairing(0, 0) => 0` and `cantorPairing("zz") => cantorPairing(25, 25) => 1300`, so we will need an array with the size of 1301 to hold all the possible input.
 
 ```go
 // => Size of the checking array.
@@ -221,18 +221,18 @@ Algorithm analysis:
 - Space complexity: `O(1)`.
   - We need 1301 boolean items in the array so actual memory usage is 1301 bytes (not countring overhead from array data structure itself).
 
-Why can Cantor pairing solution so much faster than generic hashmap solution when basically both two solutions are hashmap?
+How can Cantor pairing solution so much faster than generic hashmap solution when basically both two solutions are hashmap implementation?
 
-- Because generic hashmap uses a generic hash function which works with a much bigger number of keys so it can avoid collision but also makes it much slower compare to our Cantor pairing hash function.
-- Cantor pairing hash function here is a PHF, which tailored for this set of data (247 country codes) only. So it's much simpler and don't have to deal with collision.
+- Because generic hashmap uses a generic hash function which works with a much bigger number (non-determined) of keys so it's much slower compare to our Cantor pairing hash function.
+- Cantor pairing hash function here is a PHF, which tailored for this set of data (247 country codes) only. So it's much simpler and we don't have to deal with hash collision.
 - Cantor pairing solution operate directly on a small array which can fit directly on CPU cache makes it much faster for CPU to access.  
-  While generic hashmap data structure is much more complicated and (may) need pointer reference to the items which cannot leverage CPU cache.
+  While generic hashmap data structure is much more complicated (e.g.: handle different types of key/value, resolve collisions...) and may need pointer reference to the items which cannot leverage CPU cache.
 
 ### 5. Cantor pairing with bitmap solution
 
-The Cantor pairing solution above is really fast but has one down side is using more memory, how can we optimize it?
+The Cantor pairing solution above is really fast but has one down side is using more memory, how can we optimize it also?
 
-Instead of using 1301 bytes for the checking array, we can operate on bit, so the size required can be reduced by 8 (8 bits makes a byte) to 163 bytes.
+Instead of using 1301 bytes for the checking array, we can operate on bit level, so the size required can be reduced by 8 (8 bits makes a byte) to 1301/8 = 163 bytes.
 
 {{< img src="img/diagram-CantorBitmap.jpg" alt="Using bitmap instead of byte array" caption="<em>Figure 2: Using bitmap instead of byte array</em>" class="border-0 text-center" >}}
 
@@ -298,7 +298,7 @@ Algorithm analysis:
 - Small array access can be faster than hashmap, while working with small set of data, maybe it's better to use array. CPU cache matter.
 - When working with fixed input set, it's good time to think about perfect hash function.
 - Test, benchmark and profiling is valuable when optimizing.
-- Micro-benchmarking is overkill most of the time and premature optimization is the root of all evils [^2].
+- Micro-benchmarking is overkill most of the time and premature optimization is the root of all evils [^3].
 - This Cantor pairing PHF can become bloat quickly, e.g. `cantorPairing(500, 500) = 501000`, so it cannot be used as a generic hash function.  
   What you should take away from this post is the way of solving specific problem only.
 
@@ -325,4 +325,5 @@ BenchmarkCheckCountryCode/_cantor_bitmap_miss           323894680               
 
 [^1]:https://dlintw.github.io/gobyexample/public/memory-and-sizeof.html
 
-[^2]: http://wiki.c2.com/?PrematureOptimization
+[^2]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps
+[^3]: http://wiki.c2.com/?PrematureOptimization
