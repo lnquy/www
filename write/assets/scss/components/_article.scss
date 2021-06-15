@@ -16,6 +16,10 @@ body.dark article li {
 //     opacity: 0.8;
 // }
 
+article div.blog-header h1 {
+    line-height: 3.2rem;
+}
+
 article p.lead {
     font-family: 'Source Serif Pro';
     font-size: $font-size-base+0.35rem;
@@ -58,9 +62,10 @@ body.dark table > :not(:last-child) > :last-child > * {
 
 article p, 
 article td, 
-article li {
+article li,
+article span.katex {
    font-size: $font-size-base+0.2rem; 
-   line-height: 1.8rem;
+   line-height: 1.9rem;
 }
 
 article ul li, 

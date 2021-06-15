@@ -104,9 +104,10 @@ Algorithm analysis:
 >
 > Because the list of country code is alphabetically sorted, you can try to improve this solution by failing-fast while checking the input against the items in `ccArr`.  
 > For example: `IsCountryCodeByArray("ah")`.  
-> You only need to check until the `ai` item in the `ccArr`, if you reached `ai`, we can be sure that the `ah` input string is not existed in the `ccArr` array.
+> You only need to check until the `ai` item in the `ccArr`, if you reached `ai`, we can be sure that the `ah` input string is not existed in the `ccArr` array.  
+> Try to implement and analyze that solution, how much will it improve over the naive solution and on which case it will be as bad as the naive solution?  
 >
-> Question: Try to implement and analyze that solution, how much will it improve over the naive solution and on which case it will be as bad as the naive solution?
+> Also, how about binary search on the sorted country code list?
 
 ### 3. Generic hashmap solution
 
@@ -166,15 +167,28 @@ The idea is **somehow we can map each country code into a unique number**, then 
 {{< img src="img/diagram-Mapping.jpg" alt="Mapping string to number" caption="<em>Figure 1: Mapping string to number</em>" class="border-0 text-center" >}}
 
 Experienced readers might realise that what we're trying to do here is re-implementing a hashmap (hash the country code string to the integer key of the map).  
-The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we know before hand that the input will ranging from `aa` to `zz` so it seems like a perfect place.  
+The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we know before hand that the input will ranging from `aa` to `zz` (`[aa, zz]`)so it seems like a perfect place.  
 
 So how can we design the PHF to map country code to a unique number? A quick research will lead us to the [pairing function](https://en.wikipedia.org/wiki/Pairing_function):
 
 > "In mathematics, a pairing function is a process to **uniquely** encode two natural numbers into a single natural number." - Wikipedia
 
-That's exactly what we're looking for!  
-Let's implement the Cantor pairing function as our PHF which translates the 2 ASCII characters input to a unique number and use it as the array index.  
-Our input is ranging from `aa` to `zz`, which can be translated to the tuple of `[0, 0]` to `[25, 25]`.  We have `cantorPairing("aa") => cantorPairing(0, 0) => 0` and `cantorPairing("zz") => cantorPairing(25, 25) => 1300`, so we will need an array with the size of 1301 to hold all the possible input.
+Given $\pi$ as the Cantor pairing function, $\pi$ has two important characteristics:
+
+- $\pi(k1, k2) = n$, and $n$ is unique in the set of natural numbers $\N$.  
+  => We can be sure each country code will be mapped to a unique integer number, no collision to handle.
+
+- $\pi(k1, k2) \neq \pi(k2, k1)$.  
+
+  => We can be sure `ad` and `da` will be mapped to two different numbers.
+
+That's exactly what we're looking for!   
+Cantor pairing function is defined as below:
+
+$$\pi(k1, k2) \coloneqq \frac{(k1+k2)(k1+k2+1)}{2}+k2$$
+
+It's easy enough to understand so let's implement it as our PHF which translates the 2 ASCII characters input to a unique number and use it as the array index.  
+Our input is ranging from `aa` to `zz`, which can be translated to the tuple of `[0, 0]` to `[25, 25]`.  We have `π("aa") => π(0, 0) = 0` and `π("zz") => π(25, 25) = 1300`, so we will need an array with the size of 1301 to hold all the possible input.
 
 ```go
 // => Size of the checking array.
@@ -232,7 +246,8 @@ How can Cantor pairing solution so much faster than generic hashmap solution whe
 
 The Cantor pairing solution above is really fast but has one down side is using more memory, how can we optimize it also?
 
-Instead of using 1301 bytes for the checking array, we can operate on bit level, so the size required can be reduced by 8 (8 bits makes a byte) to 1301/8 = 163 bytes.
+Because we only need to check the existency of the given input in the list of country code, so we can use 1 bit (0 means not in list, 1 means in list) for each input in the set `[aa, zz]`.  
+=> Instead of using 1301 bytes for the checking array, we can operate on bit level using [bitmap](https://en.wikipedia.org/wiki/Bit_array), so the size required can be reduced by 8 (8 bits makes a byte) to 1301/8 = 163 bytes.
 
 {{< img src="img/diagram-CantorBitmap.jpg" alt="Using bitmap instead of byte array" caption="<em>Figure 2: Using bitmap instead of byte array</em>" class="border-0 text-center" >}}
 
@@ -323,7 +338,8 @@ BenchmarkCheckCountryCode/_cantor_bitmap_miss           323894680               
 
 
 
-[^1]:https://dlintw.github.io/gobyexample/public/memory-and-sizeof.html
+[^1]: [Go memory and sizeof](https://dlintw.github.io/gobyexample/public/memory-and-sizeof.html)
+[^2]: [Javascript Object vs Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps)
 
-[^2]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps
-[^3]: http://wiki.c2.com/?PrematureOptimization
+[^3]: [Premature optimization](http://wiki.c2.com/?PrematureOptimization)
+
