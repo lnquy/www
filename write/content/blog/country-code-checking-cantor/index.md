@@ -21,8 +21,9 @@ For example:
 ```txt
 zing.vn => true (Vietnam)
 ddc.moph.go.th => true (Thailand)
-google.com => false
+bbc.co.uk => true (UK)
 mozilla.org => false
+google.com => false
 ```
 The logic here is to check if the last part after dot of the domain belongs to the list of [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country codes.  
 Let's assume we already did other validations and string manipulations to get the last 2 characters (lowercase ASCII, assuming again) from the domain.  
@@ -167,7 +168,7 @@ The idea is **somehow we can map each country code into a unique number**, then 
 {{< img src="img/diagram-Mapping.jpg" alt="Mapping string to number" caption="<em>Figure 1: Mapping string to number</em>" class="border-0 text-center" >}}
 
 Experienced readers might realise that what we're trying to do here is re-implementing a hashmap (hash the country code string to the integer key of the map).  
-The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we know before hand that the input will ranging from `aa` to `zz` (`[aa, zz]`)so it seems like a perfect place.  
+The difference is we're trying to design a [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) (PHF) for our hashmap. PHF is generally easy to design when we have a fixed input set, and in this problem, we know before hand that the input will ranging from `aa` to `zz` (`[aa, zz]`) so it seems like a perfect place.  
 
 So how can we design the PHF to map country code to a unique number? A quick research will lead us to the [pairing function](https://en.wikipedia.org/wiki/Pairing_function):
 
@@ -238,7 +239,7 @@ Algorithm analysis:
 How can Cantor pairing solution so much faster than generic hashmap solution when basically both two solutions are hashmap implementation?
 
 - Because generic hashmap uses a generic hash function which works with a much bigger number (non-determined) of keys so it's much slower compare to our Cantor pairing hash function.
-- Cantor pairing hash function here is a PHF, which tailored for this set of data (247 country codes) only. So it's much simpler and we don't have to deal with hash collision.
+- Cantor pairing hash function here is a PHF, which tailored for this set of data (247 country codes, 1301 posible input) only. So it's much simpler and we don't have to deal with hash collision.
 - Cantor pairing solution operate directly on a small array which can fit directly on CPU cache makes it much faster for CPU to access.  
   While generic hashmap data structure is much more complicated (e.g.: handle different types of key/value, resolve collisions...) and may need pointer reference to the items which cannot leverage CPU cache.
 
@@ -340,6 +341,5 @@ BenchmarkCheckCountryCode/_cantor_bitmap_miss           323894680               
 
 [^1]: [Go memory and sizeof](https://dlintw.github.io/gobyexample/public/memory-and-sizeof.html)
 [^2]: [Javascript Object vs Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps)
-
 [^3]: [Premature optimization](http://wiki.c2.com/?PrematureOptimization)
 

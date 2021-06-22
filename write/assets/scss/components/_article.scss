@@ -84,3 +84,17 @@ article h5 {
 article img {
     border-radius: 0.25rem;
 }
+
+article blockquote {
+    font-family: 'Source Serif Pro';
+}
+
+article table.long-table,
+article table.long-table td {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+}
+
+article a.error > span {
+    background-color: red;
+}
