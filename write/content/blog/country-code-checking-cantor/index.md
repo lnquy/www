@@ -1,16 +1,16 @@
 ---
 title: "Country code checking using Cantor Pairing"
-description: "A (not so) simple but very efficient way to check country code (~400,000,000 checks per second)."
+description: "An over engineered but very efficient way to check country code (2ns/check)."
 lead: "Solutions are presented from the easiest to harder for implementation. You can jump directly to section 4 for Cantor Pairing solution."
-date: 2021-06-13T12:08:12+07:00
-lastmod: 2021-06-13T12:08:12+07:00
+date: 2022-06-13T12:08:12+07:00
+lastmod: 2023-08-16T22:33:00+07:00
 draft: false
 weight: 50
 images: ["country-code-checking-cantor.jpg"]
 contributors: ['quy-le']
 toc: true
 categories: []
-tags: ['cantor pairing', 'country code', 'data structure', 'algorithm', 'perfect hash function', 'go', 'golang']
+tags: ['performance', 'cantor pairing', 'country code', 'data structure', 'algorithm', 'perfect hash function', 'go', 'golang']
 ---
 
 ### 1. Problem
@@ -89,7 +89,7 @@ The benchmark (see test and benchmark code at the end of post) below shows the o
 
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
 BenchmarkCheckCountryCode/___array_naive_hit            192150000              6.40 ns/op
-BenchmarkCheckCountryCode/___array_naive_miss             1280067               920 ns/op
+BenchmarkCheckCountryCode/___array_naive_miss             1280067              920 ns/op
 ```
 
 Algorithm analysis:
@@ -140,8 +140,8 @@ Do you know that even Object in Javascript is just a map/dictionary? [^2]
 
 ```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
-BenchmarkCheckCountryCode/____map_string_hit            84334251                13.0 ns/op
-BenchmarkCheckCountryCode/____map_string_miss           78706964                13.9 ns/op
+BenchmarkCheckCountryCode/____map_string_hit         	147317772	         8.438 ns/op
+BenchmarkCheckCountryCode/____map_string_miss        	124363000	         9.644 ns/op
 ```
 Algorithm analysis:
 - Time complexity: `O(1)`.
@@ -225,8 +225,8 @@ The benchmark shows using Cantor pairing as the hash function, we can achieve 5 
 
 ```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
-BenchmarkCheckCountryCode/cantor_pairing_hit            393816307                2.85 ns/op
-BenchmarkCheckCountryCode/cantor_pairing_miss           442224494                2.67 ns/op
+BenchmarkCheckCountryCode/cantor_pairing_hit         	584080164	         2.056 ns/op
+BenchmarkCheckCountryCode/cantor_pairing_miss        	580287861	         2.057 ns/op
 ```
 
 Algorithm analysis:
@@ -293,12 +293,12 @@ func hasBit(n byte, pos byte) bool {
 }
 ```
 
-In order to save up memory, we have to do more calculation to figure out the location of checking bit. Benchmark shows that we are 1.3 times slower than direct access on array index in exchange of 8 times lower in memory, which is a good deal. 
+In order to save up memory, we have to do more calculation to figure out the location of checking bit. Benchmark shows that we are 1.1 times slower than direct access on array index in exchange of 8 times lower in memory, which is a good deal. 
 
 ```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
-BenchmarkCheckCountryCode/_cantor_bitmap_hit            348379489                3.41 ns/op
-BenchmarkCheckCountryCode/_cantor_bitmap_miss           352474602                3.41 ns/op
+BenchmarkCheckCountryCode/_cantor_bitmap_hit         	528360094	         2.275 ns/op
+BenchmarkCheckCountryCode/_cantor_bitmap_miss        	531354234	         2.256 ns/op
 ```
 
 Algorithm analysis:
@@ -327,17 +327,15 @@ Or see it on [Github](https://github.com/lnquy/www/tree/main/write/content/blog/
 
 ```shell
 $ go test -run=^$ -bench=BenchmarkCheckCountryCode -cpu 1
-BenchmarkCheckCountryCode/___array_naive_hit            234570860                5.15 ns/op
-BenchmarkCheckCountryCode/____map_string_hit            73966557                15.3 ns/op
-BenchmarkCheckCountryCode/cantor_pairing_hit            423420466                2.81 ns/op
-BenchmarkCheckCountryCode/_cantor_bitmap_hit            305096086                4.03 ns/op
-BenchmarkCheckCountryCode/___array_naive_miss            1411725               849 ns/op
-BenchmarkCheckCountryCode/____map_string_miss           72614508                15.1 ns/op
-BenchmarkCheckCountryCode/cantor_pairing_miss           447370311                2.70 ns/op
-BenchmarkCheckCountryCode/_cantor_bitmap_miss           323894680                3.72 ns/op
+BenchmarkCheckCountryCode/___array_naive_hit         	305538489	         3.779 ns/op
+BenchmarkCheckCountryCode/____map_string_hit         	147317772	         8.438 ns/op
+BenchmarkCheckCountryCode/cantor_pairing_hit         	584080164	         2.056 ns/op
+BenchmarkCheckCountryCode/_cantor_bitmap_hit         	528360094	         2.275 ns/op
+BenchmarkCheckCountryCode/___array_naive_miss        	  1913680	         621.7 ns/op
+BenchmarkCheckCountryCode/____map_string_miss        	124363000	         9.644 ns/op
+BenchmarkCheckCountryCode/cantor_pairing_miss        	580287861	         2.057 ns/op
+BenchmarkCheckCountryCode/_cantor_bitmap_miss        	531354234	         2.256 ns/op
 ```
-
-
 
 [^1]: [Go memory and sizeof](https://dlintw.github.io/gobyexample/public/memory-and-sizeof.html)
 [^2]: [Javascript Object vs Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#objects_vs._maps)

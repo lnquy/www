@@ -2,9 +2,9 @@
 title: "//go:linkname"
 description: "Everything you need to know about go:linkname directive."
 lead: ""
-date: 2021-06-18T22:58:40+07:00
-lastmod: 2021-06-18T22:58:40+07:00
-draft: true
+date: 2022-02-22T22:58:40+07:00
+lastmod: 2022-02-22T22:58:40+07:00
+draft: false
 weight: 50
 images: ["go-linkname.jpg"]
 contributors: ["quy-le"]

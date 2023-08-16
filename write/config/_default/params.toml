@@ -1,10 +1,10 @@
 # Meta Data for SEO
 
 ## Homepage
-title = "lnquy"
+title = "Q"
 titleSeparator = "-"
 titleAddition = "Fight the cargo cult"
-description = "lnquy is a personal blog that helps noting down everything I've learned or just simply a place for ranting, sometimes."
+description = "lnquy is a personal blog for me to note down all the things I've faced and learned."
 
 ## Open Graph + Twitter Cards
 # images = ["doks.png"]
@@ -38,7 +38,7 @@ lqipWidth = "20x"
 imageResizeQuality = "%dx q90"
 
 # Footer
-footer = "Quy Le © 2021. Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a> and <a href=\"https://getdoks.org/\">Doks</a>"
+footer = "Quy Le © 2023. Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a> and <a href=\"https://getdoks.org/\">Doks</a>"
 
 # Alert
 alert = false

@@ -1,3 +1,4 @@
 baseURL = "https://lnquy.com/"
 languageCode = "en-us"
-title = "lnquy"
+title = "Q"
+#theme = "Doks"

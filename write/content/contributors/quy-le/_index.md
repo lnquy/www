@@ -7,6 +7,6 @@ draft: false
 images: []
 ---
 
-Some info should come here later.
+A software engineer trying to learn and understand better
 
 [@lnquy](https://github.com/lnquy)
