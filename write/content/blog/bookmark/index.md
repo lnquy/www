@@ -3,7 +3,7 @@ title: "Bookmarks of useful resources on the web"
 description: "List of useful stuffs I've stump on, update sometimes."
 lead: "List of all the useful resources I've read over the years and worth re-visiting from time to time. <br>In no particular order.<br>Update sometimes."
 date: 2023-08-17T09:31:00+07:00
-lastmod: 2023-08-17T09:31:00+07:00
+lastmod: 2023-10-02T21:43:00+07:00
 draft: false
 weight: 50
 images: []
@@ -40,6 +40,7 @@ tags: ['bookmark', 'internet', 'knowledge']
 ##### Persistent Storage
 - [x] The Log: What every software engineer should know about real-time data's unifying abstraction [2013-12-16]: [https://engineering.linkedin.com/distributed-systems/](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)
 - [x] TimescaleDB Architecture & Concepts [2021]: [https://github.com/timescale/docs.timescale.com-content](https://github.com/timescale/docs.timescale.com-content/blob/master/introduction/architecture.md)
+- [x] Building and operating a pretty big storage system called S3 [2023-07-27]: [https://www.allthingsdistributed.com/2023/07/building-and-operating-a-pretty-big-storage-system.html](https://www.allthingsdistributed.com/2023/07/building-and-operating-a-pretty-big-storage-system.html)
 
 ##### String
 - [x] The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!) [2003-10-08]: [https://www.joelonsoftware.com/](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/)
