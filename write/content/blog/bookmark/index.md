@@ -44,6 +44,7 @@ tags: ['bookmark', 'internet', 'knowledge']
 
 ##### String
 - [x] The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!) [2003-10-08]: [https://www.joelonsoftware.com/](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/)
+- [x] The Absolute Minimum Every Software Developer Must Know About Unicode in 2023 (Still No Excuses!) [2023-10-02]: [https://tonsky.me/blog/unicode/](https://tonsky.me/blog/unicode/)
 
 
 ### UI Design
