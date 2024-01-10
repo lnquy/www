@@ -38,7 +38,7 @@ lqipWidth = "20x"
 imageResizeQuality = "%dx q90"
 
 # Footer
-footer = "Quy Le © 2023. Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a> and <a href=\"https://getdoks.org/\">Doks</a>"
+footer = "Quy Le © 2024. Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a> and <a href=\"https://getdoks.org/\">Doks</a>"
 
 # Alert
 alert = false
